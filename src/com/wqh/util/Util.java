@@ -1,5 +1,7 @@
 package com.wqh.util;
 
+import com.wqh.base.Suf;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,7 +34,7 @@ public class Util {
         if (tempList != null) {
             for (int i = 0; i < tempList.length; i++) {
                 if (tempList[i].isFile()) {
-                    if (tempList[i].getPath().endsWith(".txt")) {
+                    if (tempList[i].getPath().endsWith(Suf.txt.toString())) {
                         System.out.println("已找到文本文件：" + tempList[i]);
                         files.add(tempList[i].toString());
                     }
@@ -46,26 +48,54 @@ public class Util {
     }
 
     /**
+     * 文件名写入到文件中，覆盖原文
+     *
      * @param path 文件地址
      */
     public static void write(String path) {
+        write(path, path, false);
+    }
+
+    /**
+     * 将文件内容写入到文件中，覆盖原文
+     *
+     * @param path 文件地址
+     * @param str  写入的内容
+     */
+    public static void write(String path, String str) {
+        write(path, str, false);
+    }
+
+    /**
+     * 文件名写入到文件中，可选是否覆盖原文
+     *
+     * @param path   文件地址
+     * @param append 是否覆盖
+     */
+    public static void write(String path, boolean append) {
+        write(path, path, append);
+    }
+
+    /**
+     * @param path   文件地址
+     * @param str    写入的内容
+     * @param append 是否覆盖
+     */
+    public static void write(String path, String str, boolean append) {
         File file = new File(path);
 
         if (file.isDirectory()) {
             System.out.println("这不是一个文件");
             return;
         }
-
-        if (!file.getPath().endsWith(".txt")) {
+        if (!file.getPath().endsWith(Suf.txt.toString())) {
             System.out.println("这不是一个文本文件");
             return;
         }
-
         FileOutputStream outputStream = null;
-
         try {
-            outputStream = new FileOutputStream(file, true);
-            byte[] bytes = ("\r\n" + path).getBytes();
+            outputStream = new FileOutputStream(file, append);
+            byte[] bytes = str.getBytes();
             outputStream.write(bytes);
         } catch (java.io.IOException e) {
             e.printStackTrace();
